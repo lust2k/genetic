@@ -17,6 +17,7 @@ void draw() {
   updateCarros();
   ellipse(this.target.x, this.target.y, 40 , 40);
   obstaculo(mouseX, mouseY, 400, 20);
+  todosMortos();
 }
 
 void createCarros(int pop) {
@@ -28,6 +29,7 @@ void createCarros(int pop) {
 
 void evaluate() {
   float maxFit = 0;
+  int mortos = 0;
   for (Carro carro: carros) {
     float d = 1/dist(carro.pos.x, carro.pos.y, target.x, target.y);
     if (d > maxFit) {
@@ -54,7 +56,20 @@ void evaluate() {
     }
   }
 }
-
+void todosMortos() {
+  int mortos = 0;
+  for (Carro carro: carros) {
+    if (carro.colidiu) {
+      mortos++; 
+    }
+  }
+  if (mortos >= (pop/3)*2) {
+    majinboo.clear();
+    for (int i = 0; i < pop; i++) {
+      majinboo.add(new Carro(lifespan, null));
+    }
+  }
+}
 void updateCarros() {
   if (lifespan == count) {
     count = 0;
@@ -93,6 +108,7 @@ Carro crossover(Carro a, Carro b){
 }
 
 void obstaculo(int x, int y, int a, int b) {
+
   rectMode(CORNER);
   for (Carro carro: carros) {
     if (carro.pos.y >= y && carro.pos.y <= y+b) {
